@@ -69,7 +69,7 @@ Configs: {
 		}
 
 		ArrowsInCorner: {
-			Label: Arrows in Corner
+			Label: Arrows in the Corner
 			Tooltip: ""
 		}
 

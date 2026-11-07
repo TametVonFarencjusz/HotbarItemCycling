@@ -5,6 +5,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
@@ -42,7 +43,7 @@ namespace HotbarItemCycling
             backgroundTexture = Main.Assets.Request<Texture2D>("Images/Inventory_Back", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             itemTexture = Main.Assets.Request<Texture2D>("Images/Item_3507", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             valueStrings = Enum.GetNames(MemberInfo.Type);
-            TextDisplayFunction = () => Label + ": " + GetStringValue();
+            TextDisplayFunction = () => Label + ": " + Language.GetText("Mods.HotbarItemCycling.Configs.OutlineStyle." + GetStringValue() + ".Label");
         }
 
         void SetValue(OutlineStyle value) => SetObject(value);
