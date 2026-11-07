@@ -34,11 +34,13 @@ namespace HotbarItemCycling
     {
         string[] valueStrings;
         Texture2D backgroundTexture;
+        Texture2D itemTexture;
 
         public override void OnBind()
         {
             base.OnBind();
             backgroundTexture = Main.Assets.Request<Texture2D>("Images/Inventory_Back", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            itemTexture = Main.Assets.Request<Texture2D>("Images/Item_3507", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             valueStrings = Enum.GetNames(MemberInfo.Type);
             TextDisplayFunction = () => Label + ": " + GetStringValue();
         }
@@ -76,6 +78,9 @@ namespace HotbarItemCycling
             float scale = 0.5f;
             Vector2 pos = new Vector2(dimensions.X + dimensions.Width - 34, dimensions.Y + 2);
             spriteBatch.Draw(backgroundTexture, pos, null, Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
+
+            Vector2 pos2 = pos + backgroundTexture.Size() / 2 * scale;
+            spriteBatch.Draw(itemTexture, pos2, null, Color.White, 0f, itemTexture.Size() / 2, scale, SpriteEffects.None, 0f);
 
             OutlineStyle outline = GetValue();
 

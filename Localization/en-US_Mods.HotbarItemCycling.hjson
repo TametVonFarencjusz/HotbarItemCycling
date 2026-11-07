@@ -1,5 +1,7 @@
 Configs: {
 	CyclingConfig: {
+		DisplayName: Hotbar Item Cycling Config
+
 		NoCyclingWhileUsingItem: {
 			Tooltip:
 				'''
@@ -15,8 +17,6 @@ Configs: {
 			Label: Skip Unconnected Favorited Items
 		}
 
-		DisplayName: Cycling Config
-
 		Headers: {
 			Outlines: Outlines
 			InGame: In Game
@@ -24,7 +24,7 @@ Configs: {
 
 		OutlineStylePicker: {
 			Label: Outline Style
-			Tooltip: ""
+			Tooltip: Choose Outline Style.
 		}
 
 		OutlineStyleColorSwap: {
