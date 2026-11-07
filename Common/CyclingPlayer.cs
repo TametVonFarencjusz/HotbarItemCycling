@@ -90,7 +90,7 @@ namespace HotbarItemCycling
                 Texture2D texture = outlineTextures[outlineStyle].Value;
 
                 bool changeStyle = false;
-                if (Main.LocalPlayer.selectedItem == invSlot && !GetInstance<CyclingConfig>().OutlineStyleDontChange)
+                if (Main.LocalPlayer.selectedItem == invSlot && !GetInstance<CyclingConfig>().OutlineStyleDontChange && !Main.playerInventory)
                 {
                     changeStyle = true;
                 }
