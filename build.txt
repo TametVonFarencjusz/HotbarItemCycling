@@ -1,0 +1,3 @@
+displayName = Hotbar Item Cycling
+author = Tamet von Farencjusz
+version = 1.0

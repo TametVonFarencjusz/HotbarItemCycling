@@ -1,0 +1,86 @@
+Configs: {
+	CyclingConfig: {
+		NoCyclingWhileUsingItem: {
+			Tooltip:
+				'''
+				Prevent player from cycling items while using an item.
+				It prevent a bug similiar to Attribute Swapping from Minecraft.
+				Turn off at own risk.
+				'''
+			Label: No Cycling While Using Item
+		}
+
+		SkipUnconnectedItems: {
+			Tooltip: Marked as favorited items in column have to be directily connected to hotbar or indirectly by other favorited items.
+			Label: Skip Unconnected Favorited Items
+		}
+
+		DisplayName: Cycling Config
+
+		Headers: {
+			Outlines: Outlines
+			InGame: In Game
+		}
+
+		OutlineStylePicker: {
+			Label: Outline Style
+			Tooltip: ""
+		}
+
+		OutlineStyleColorSwap: {
+			Label: Swap Outline Style on Selected Items
+			Tooltip:
+				'''
+				Swap outline primary color with secondary.
+				Some styles have additional to better see them on blue and yellow item slot.
+				Primary color is used for blue item slot.
+				Secondary color is used for yelow item slot.
+				'''
+		}
+
+		OutlineStyleDontChange: {
+			Label: Don't Change Outline Style on Selected Items
+			Tooltip:
+				'''
+				Outline colors won't change between primary and secondary colors.
+				Some styles have additional to better see them on blue and yellow item slot.
+				Primary color is used for blue item slot.
+				Secondary color is used for yelow item slot.
+				'''
+		}
+	}
+
+	OutlineStyle: {
+		Tooltip: ""
+
+		White: {
+			Tooltip: ""
+			Label: White
+		}
+
+		YellowBlue: {
+			Label: Yellow/Blue
+			Tooltip: ""
+		}
+
+		Golden: {
+			Label: Golden
+			Tooltip: ""
+		}
+
+		ArrowsInCorner: {
+			Label: Arrows in Corner
+			Tooltip: ""
+		}
+
+		GreenArrows: {
+			Label: Green Arrows
+			Tooltip: ""
+		}
+
+		YellowBlueArrows: {
+			Label: Yellow/Blue Arrows
+			Tooltip: ""
+		}
+	}
+}

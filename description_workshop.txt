@@ -1,0 +1,3 @@
+This mod lets you cycle between items marked as favorited in the hotbar.
+To do this, simply press the corresponding hotbar key to swap to the next item from column.
+Check out the mod configs to customize certain features to suit your needs.
