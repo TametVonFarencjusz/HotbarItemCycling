@@ -31,8 +31,8 @@ Configs: {
 			Label: Swap Outline Style on Selected Items
 			Tooltip:
 				'''
-				Swap outline primary color with secondary.
-				Some styles have additional to better see them on blue and yellow item slot.
+				Swap the primary outline color with the secondary color.
+				Some styles have additional colors to better see them on blue and yellow item slot.
 				Primary color is used for blue item slot.
 				Secondary color is used for yelow item slot.
 				Mod Config must be saved for the changes to appear in the Preview.
@@ -43,12 +43,21 @@ Configs: {
 			Label: Don't Change Outline Style on Selected Items
 			Tooltip:
 				'''
-				Outline colors won't change between primary and secondary colors.
-				Some styles have additional to better see them on blue and yellow item slot.
+				Prevent the outline color from changing from the primary color to the secondary color.
+				Some styles have additional colors to better see them on blue and yellow item slot.
 				Primary color is used for blue item slot.
 				Secondary color is used for yelow item slot.
 				Mod Config must be saved for the changes to appear in the Preview.
 				'''
+		}
+
+		OutlineVisibility: {
+			Tooltip:
+				'''
+				Set Outline visibility.
+				Mod Config must be saved for the changes to appear in the Preview.
+				'''
+			Label: Outline Visibility
 		}
 	}
 

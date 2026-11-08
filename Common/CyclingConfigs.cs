@@ -29,9 +29,17 @@ namespace HotbarItemCycling
         [Header("Outlines")]
         public OutlineStyle OutlineStylePicker;
 
+        // Sets visibility of Outline. 1f - non-transparent, 0f - invisible
+        [DefaultValue(1f)]
+        [Range(0f, 1f)]
+        [Increment(.025f)]
+        public float OutlineVisibility;
+
+        // Prevent Outline colors from changing between color A and color B.
         [DefaultValue(false)]
         public bool OutlineStyleDontChange;
 
+        // Swap outline color A with color B.
         [DefaultValue(false)]
         public bool OutlineStyleColorSwap;
     }

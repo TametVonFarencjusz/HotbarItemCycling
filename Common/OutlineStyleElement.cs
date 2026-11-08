@@ -118,8 +118,11 @@ namespace HotbarItemCycling
                 outlineTexture = CyclingPlayer.outlineTexturesB[(int)outline].Value;
             }
 
+            // Color updated by Alpha value
+            Color color = Color.White * GetInstance<CyclingConfig>().OutlineVisibility;
+
             // Drawing outline
-            spriteBatch.Draw(outlineTexture, itemSlotCenter, null, Color.White, 0f, outlineTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(outlineTexture, itemSlotCenter, null, color, 0f, outlineTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
         }
     }
 }

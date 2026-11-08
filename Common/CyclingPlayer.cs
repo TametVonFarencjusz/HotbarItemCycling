@@ -105,8 +105,12 @@ namespace HotbarItemCycling
 
                 // Setting outlinePosition to center different size Outline textures. Normal size of ItemSlot is 52x52
                 Vector2 outlinePosition = position + (new Vector2(52, 52) - outlineTexture.Size()) / 2;
+
+                // Color updated by Alpha value
+                Color color = Main.inventoryBack * GetInstance<CyclingConfig>().OutlineVisibility;
+
                 // Drawing Outline
-                spriteBatch.Draw(outlineTexture, outlinePosition, null, Main.inventoryBack, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(outlineTexture, outlinePosition, null, color, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
             }
         }
 
