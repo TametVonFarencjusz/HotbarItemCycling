@@ -80,31 +80,33 @@ namespace HotbarItemCycling
             // Checking if item should be highlighted
             if (invSlot != -1 && Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[invSlot % 10] >= invSlot / 10)
             {
-                float inventoryScale = Main.inventoryScale;
-
+                // Getting style from CyclingConfig
                 int outlineStyle = (int)GetInstance<CyclingConfig>().OutlineStylePicker;
-
-                Texture2D texture = outlineTexturesA[outlineStyle].Value;
-
+                Texture2D outlineTexture = outlineTexturesA[outlineStyle].Value;
+                
+                // Checking if outline colors should use style B
                 bool changeStyle = false;
                 if (Main.LocalPlayer.selectedItem == invSlot && !GetInstance<CyclingConfig>().OutlineStyleDontChange && !Main.playerInventory)
                 {
                     changeStyle = true;
                 }
 
+                // Checking if outline colors should be swapped
                 if (GetInstance<CyclingConfig>().OutlineStyleColorSwap)
                 {
                     changeStyle = !changeStyle;
                 }
 
+                // If changeStyle is true it means that outline should be changed to style 
                 if (changeStyle)
                 {
-                    texture = outlineTexturesB[outlineStyle].Value;
+                    outlineTexture = outlineTexturesB[outlineStyle].Value;
                 }
 
-                Color color2 = Main.inventoryBack;
-                Vector2 pos = position + (new Vector2(52, 52) - texture.Size()) / 2;
-                spriteBatch.Draw(texture, pos, null, color2, 0f, default(Vector2), inventoryScale, SpriteEffects.None, 0f);
+                // Setting outlinePosition to center different size Outline textures. Normal size of ItemSlot is 52x52
+                Vector2 outlinePosition = position + (new Vector2(52, 52) - outlineTexture.Size()) / 2;
+                // Drawing Outline
+                spriteBatch.Draw(outlineTexture, outlinePosition, null, Main.inventoryBack, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
             }
         }
 

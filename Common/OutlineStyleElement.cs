@@ -34,16 +34,20 @@ namespace HotbarItemCycling
     class OutlineStyleElement : ConfigElement
     {
         string[] valueStrings;
-        Texture2D backgroundTexture;
+        Texture2D backgroundTextureA;
+        Texture2D backgroundTextureB;
         Texture2D itemTexture;
 
         public override void OnBind()
         {
             base.OnBind();
-            backgroundTexture = Main.Assets.Request<Texture2D>("Images/Inventory_Back", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            backgroundTextureA = Main.Assets.Request<Texture2D>("Images/Inventory_Back", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            backgroundTextureB = Main.Assets.Request<Texture2D>("Images/Inventory_Back14", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             itemTexture = Main.Assets.Request<Texture2D>("Images/Item_3507", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             valueStrings = Enum.GetNames(MemberInfo.Type);
             TextDisplayFunction = () => Label + ": " + Language.GetText("Mods.HotbarItemCycling.Configs.OutlineStyle." + GetStringValue() + ".Label");
+
+            Height.Pixels *= 2f;
         }
 
         void SetValue(OutlineStyle value) => SetObject(value);
@@ -69,27 +73,53 @@ namespace HotbarItemCycling
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // Drawing base ConfigElement
             base.Draw(spriteBatch);
+
+            // Position of ItemSlot in mod config
             CalculatedStyle dimensions = GetDimensions();
+            Vector2 itemSlotPosition = new Vector2(dimensions.X + dimensions.Width - 70, dimensions.Y + 2);
+            Vector2 itemSlotCenter = itemSlotPosition + backgroundTextureA.Size() / 2;
 
-            float scale = 0.5f;
-            Vector2 pos = new Vector2(dimensions.X + dimensions.Width - 34, dimensions.Y + 2);
-            spriteBatch.Draw(backgroundTexture, pos, null, Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
+            // Check if mouse is over ItemSlot to set it to alt style
+            bool mouseOverX = Main.mouseX >= itemSlotPosition.X && Main.mouseX <= itemSlotPosition.X + backgroundTextureA.Width;
+            bool mouseOverY = Main.mouseY >= itemSlotPosition.Y && Main.mouseY <= itemSlotPosition.Y + backgroundTextureA.Height;
+            bool altStyle = mouseOverX && mouseOverY;
 
-            Vector2 pos2 = pos + backgroundTexture.Size() / 2 * scale;
-            spriteBatch.Draw(itemTexture, pos2, null, Color.White, 0f, itemTexture.Size() / 2, scale, SpriteEffects.None, 0f);
+            // Drawing ItemSlot
+            Texture2D itemSlotTexture = altStyle ? backgroundTextureB : backgroundTextureA;
+            spriteBatch.Draw(itemSlotTexture, itemSlotPosition, null, Color.White, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
 
+
+            // Draw Copper Shortsword
+            spriteBatch.Draw(itemTexture, itemSlotCenter, null, Color.White, 0f, itemTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
+
+
+            // Draw Outline
             OutlineStyle outline = GetValue();
+            Texture2D outlineTexture = CyclingPlayer.outlineTexturesA[(int)outline].Value;
 
-
-            Texture2D texture = CyclingPlayer.outlineTexturesA[(int)outline].Value;
-            if (GetInstance<CyclingConfig>().OutlineStyleColorSwap)
+            // Checking if outline colors should use style B
+            bool changeStyle = false;
+            if (altStyle && !GetInstance<CyclingConfig>().OutlineStyleDontChange)
             {
-                texture = CyclingPlayer.outlineTexturesB[(int)outline].Value;
+                changeStyle = true;
             }
 
-            pos += (new Vector2(52, 52) - texture.Size()) / 2 * scale;
-            spriteBatch.Draw(texture, pos, null, Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
+            // Checking if outline colors should be swapped
+            if (GetInstance<CyclingConfig>().OutlineStyleColorSwap)
+            {
+                changeStyle = !changeStyle;
+            }
+
+            // If changeStyle is true it means that outline should be changed to style 
+            if (changeStyle)
+            {
+                outlineTexture = CyclingPlayer.outlineTexturesB[(int)outline].Value;
+            }
+
+            // Drawing outline
+            spriteBatch.Draw(outlineTexture, itemSlotCenter, null, Color.White, 0f, outlineTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
         }
     }
 }
