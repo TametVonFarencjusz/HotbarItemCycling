@@ -26,7 +26,7 @@ namespace HotbarItemCycling
         White,
         YellowBlue,
         Golden,
-        ArrowsInCorner,
+        ArrowsInTheCorner,
         GreenArrows,
         YellowBlueArrows
     }
@@ -72,10 +72,6 @@ namespace HotbarItemCycling
             base.Draw(spriteBatch);
             CalculatedStyle dimensions = GetDimensions();
 
-
-            //var circleSourceRectangle = new Rectangle(0, 0, (texture.Width - 2) / 2, texture.Height);
-            //spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)(dimensions.X + dimensions.Width - 25), (int)(dimensions.Y + 4), 22, 22), Color.LightGreen);
-
             float scale = 0.5f;
             Vector2 pos = new Vector2(dimensions.X + dimensions.Width - 34, dimensions.Y + 2);
             spriteBatch.Draw(backgroundTexture, pos, null, Color.White, 0f, default(Vector2), scale, SpriteEffects.None, 0f);
@@ -86,10 +82,10 @@ namespace HotbarItemCycling
             OutlineStyle outline = GetValue();
 
 
-            Texture2D texture = CyclingPlayer.outlineTextures[(int)outline].Value;
+            Texture2D texture = CyclingPlayer.outlineTexturesA[(int)outline].Value;
             if (GetInstance<CyclingConfig>().OutlineStyleColorSwap)
             {
-                texture = CyclingPlayer.outline2Textures[(int)outline].Value;
+                texture = CyclingPlayer.outlineTexturesB[(int)outline].Value;
             }
 
             pos += (new Vector2(52, 52) - texture.Size()) / 2 * scale;

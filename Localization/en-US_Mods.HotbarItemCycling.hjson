@@ -68,11 +68,6 @@ Configs: {
 			Tooltip: ""
 		}
 
-		ArrowsInCorner: {
-			Label: Arrows in the Corner
-			Tooltip: ""
-		}
-
 		GreenArrows: {
 			Label: Green Arrows
 			Tooltip: ""
@@ -81,6 +76,11 @@ Configs: {
 		YellowBlueArrows: {
 			Label: Yellow/Blue Arrows
 			Tooltip: ""
+		}
+
+		ArrowsInTheCorner: {
+			Tooltip: ""
+			Label: Arrows In The Corner
 		}
 	}
 }

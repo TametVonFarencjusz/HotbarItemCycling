@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ModLoader;
@@ -17,31 +18,26 @@ namespace HotbarItemCycling
         // This array is set every frame during ModPlayer.PreUpdate() so any other ItemSlot can know if it should draw outline 
         public int[] slotHighlight = new int[10];
         // Texture of the Outline
-        public static Asset<Texture2D>[] outlineTextures = new Asset<Texture2D>[6];
+        public static Asset<Texture2D>[] outlineTexturesA;
         // Texture of the Outline while item is selected
-        public static Asset<Texture2D>[] outline2Textures = new Asset<Texture2D>[6];
+        public static Asset<Texture2D>[] outlineTexturesB;
 
         public override void Load()
         {
             // Loading Outline Texture
-            // White
-            outlineTextures[0] = Request<Texture2D>("HotbarItemCycling/Extra/White");
-            outline2Textures[0] = Request<Texture2D>("HotbarItemCycling/Extra/White");
+            string[] outlineNames = Enum.GetNames(typeof(OutlineStyle));
+            int size = outlineNames.Length;
+            string outlinePath = "HotbarItemCycling/Assets/Outlines/";
 
-            outlineTextures[1] = Request<Texture2D>("HotbarItemCycling/Extra/Yellow");
-            outline2Textures[1] = Request<Texture2D>("HotbarItemCycling/Extra/Blue");
+            outlineTexturesA = new Asset<Texture2D>[size];
+            outlineTexturesB = new Asset<Texture2D>[size];
 
-            outlineTextures[2] = Request<Texture2D>("HotbarItemCycling/Extra/Golden");
-            outline2Textures[2] = Request<Texture2D>("HotbarItemCycling/Extra/Silver");
-
-            outlineTextures[3] = Request<Texture2D>("HotbarItemCycling/Extra/LeftCornerCycle");
-            outline2Textures[3] = Request<Texture2D>("HotbarItemCycling/Extra/LeftCornerCycle");
-
-            outlineTextures[4] = Request<Texture2D>("HotbarItemCycling/Extra/GreenArrows");
-            outline2Textures[4] = Request<Texture2D>("HotbarItemCycling/Extra/GreenArrows");
-
-            outlineTextures[5] = Request<Texture2D>("HotbarItemCycling/Extra/YellowArrows");
-            outline2Textures[5] = Request<Texture2D>("HotbarItemCycling/Extra/BlueArrows");
+            // Loading all textures based on names from Enum (OutlineStyle)
+            for (int i = 0; i < size; i++)
+            {
+                outlineTexturesA[i] = Request<Texture2D>(outlinePath + outlineNames[i] + "_A");
+                outlineTexturesB[i] = Request<Texture2D>(outlinePath + outlineNames[i] + "_B");
+            }
 
             // Detouring ItemSlot draw function to Draw Outline after it was drawn
             Terraria.UI.On_ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += PostDrawSlot;
@@ -50,7 +46,8 @@ namespace HotbarItemCycling
         public override void Unload()
         {
             // Unloading Outline Texture
-            outlineTextures = null;
+            outlineTexturesA = null;
+            outlineTexturesB = null;
         }
 
         private static void PostDrawSlot(On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor = default(Color))
@@ -87,7 +84,7 @@ namespace HotbarItemCycling
 
                 int outlineStyle = (int)GetInstance<CyclingConfig>().OutlineStylePicker;
 
-                Texture2D texture = outlineTextures[outlineStyle].Value;
+                Texture2D texture = outlineTexturesA[outlineStyle].Value;
 
                 bool changeStyle = false;
                 if (Main.LocalPlayer.selectedItem == invSlot && !GetInstance<CyclingConfig>().OutlineStyleDontChange && !Main.playerInventory)
@@ -102,7 +99,7 @@ namespace HotbarItemCycling
 
                 if (changeStyle)
                 {
-                    texture = outline2Textures[outlineStyle].Value;
+                    texture = outlineTexturesB[outlineStyle].Value;
                 }
 
                 Color color2 = Main.inventoryBack;
