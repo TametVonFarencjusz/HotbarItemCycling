@@ -14,6 +14,8 @@ namespace HotbarItemCycling
 {
     public class BuffBarSystem : GlobalBuff
     {
+        private static CyclingPlayer modPlayer => Main.LocalPlayer.GetModPlayer<CyclingPlayer>();
+
         public override bool PreDraw(SpriteBatch spriteBatch, int type, int buffIndex, ref BuffDrawParams drawParams)
         {
             if (GetInstance<ItemPreviewConfig>().ItemPreviewStyle > 0 && GetInstance<ItemPreviewConfig>().BuffPosition > 0 && !Main.playerInventory)
@@ -24,11 +26,14 @@ namespace HotbarItemCycling
                 int selectedCount = 0;
                 if (Main.LocalPlayer.selectedItem < 10)
                 {
-                    for (int j = 1; j < 5; j++)
+                    if (modPlayer.slotHighlight[Main.LocalPlayer.selectedItem])
                     {
-                        if (Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[Main.LocalPlayer.selectedItem + j * 10])
+                        for (int j = 1; j < 5; j++)
                         {
-                            selectedCount += 1;
+                            if (modPlayer.slotHighlight[Main.LocalPlayer.selectedItem + j * 10])
+                            {
+                                selectedCount += 1;
+                            }
                         }
                     }
                 }
@@ -37,15 +42,18 @@ namespace HotbarItemCycling
                 int maxCount = 0;
                 for (int i = 0; i < 10; i++)
                 {
-                    int columnMax = 0;
-                    for (int j = 1; j < 5; j++)
+                    if (modPlayer.slotHighlight[i])
                     {
-                        if (Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[i + j * 10])
+                        int columnMax = 0;
+                        for (int j = 1; j < 5; j++)
                         {
-                            columnMax += 1;
+                            if (modPlayer.slotHighlight[i + j * 10])
+                            {
+                                columnMax += 1;
+                            }
                         }
+                        maxCount = Math.Max(maxCount, columnMax);
                     }
-                    maxCount = Math.Max(maxCount, columnMax);
                 }
                 maxCount = Math.Min(maxCount, GetInstance<ItemPreviewConfig>().ItemMaxCount);
 

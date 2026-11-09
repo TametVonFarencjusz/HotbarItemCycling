@@ -4,7 +4,6 @@ using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -19,6 +18,10 @@ namespace HotbarItemCycling
         public static Asset<Texture2D>[] outlineTexturesA;
         // Texture of the Outline while item is selected
         public static Asset<Texture2D>[] outlineTexturesB;
+
+        public static Item hoverItem = new Item();
+
+        private static CyclingPlayer modPlayer => Main.LocalPlayer.GetModPlayer<CyclingPlayer>();
 
         public override void Load()
         {
@@ -39,6 +42,7 @@ namespace HotbarItemCycling
 
             // Detouring ItemSlot draw function to Draw Outline after it was drawn
             Terraria.UI.On_ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += PostDrawSlot;
+            Terraria.UI.On_ItemSlot.MouseHover_ItemArray_int_int += ItemSlotMouseHover;
         }
 
         public override void Unload()
@@ -46,6 +50,18 @@ namespace HotbarItemCycling
             // Unloading Outline Texture
             outlineTexturesA = null;
             outlineTexturesB = null;
+        }
+
+        private static void ItemSlotMouseHover(On_ItemSlot.orig_MouseHover_ItemArray_int_int orig, Item[] inv, int context, int slot)
+        {
+            // Orginal function
+            orig(inv, context, slot);
+
+            //
+            if (!inv[slot].IsAir && inv[slot].stack > 0)
+            {
+                hoverItem = inv[slot];
+            }
         }
 
         private static void PostDrawSlot(On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor = default(Color))
@@ -59,77 +75,93 @@ namespace HotbarItemCycling
                 return;
             }
 
-            if (inv[slot].IsAir || !inv[slot].favorited)
+            if (inv[slot].IsAir)
             {
                 return;
             }
 
-            // Finding item from ItemSlot in players inventory
-            int invSlot = -1;
-            for (int i = 0; i < 50; i++)
-            {
-                if (Main.LocalPlayer.inventory[i] == inv[slot])
-                {
-                    invSlot = i;
-                    break;
-                }
-            }
-
             // Checking if item should be highlighted
-            if (invSlot != -1 && Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[invSlot])
+            if (slot < 50 && modPlayer.slotHighlight[slot])
             {
-                // Getting style from MainConfig
-                int outlineStyle = (int)GetInstance<MainConfig>().OutlineStylePicker;
-                Texture2D outlineTexture = outlineTexturesA[outlineStyle].Value;
-
-                // Checking if outline colors should use style B
-                bool changeStyle = false;
-                if (!GetInstance<MainConfig>().OutlineStyleDontChange && Main.LocalPlayer.selectedItem == invSlot && !Main.playerInventory)
-                {
-                    changeStyle = true;
-                }
-
-                // Checking if outline colors should be swapped
-                if (GetInstance<MainConfig>().OutlineStyleColorSwap)
-                {
-                    changeStyle = !changeStyle;
-                }
-
-                // If changeStyle is true it means that outline should be changed to style 
-                if (changeStyle)
-                {
-                    outlineTexture = outlineTexturesB[outlineStyle].Value;
-                }
-
-                // Setting outlinePosition to center different size Outline textures. Normal size of ItemSlot is 52x52
-                Vector2 outlinePosition = position + (new Vector2(52, 52) - outlineTexture.Size()) / 2;
-
-                // Color updated by Alpha value
-                Color color = Main.inventoryBack * GetInstance<MainConfig>().OutlineVisibility;
-
-                // Drawing Outline
-                spriteBatch.Draw(outlineTexture, outlinePosition, null, color, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
+                // Draw Outline
+                DrawOutline(spriteBatch, inv, context, slot, position, lightColor);
 
 
                 // Draw slot under
-                if (GetInstance<ItemPreviewConfig>().ItemPreviewStyle != ItemPreviewStyle.Disabled && !Main.playerInventory)
-                {
-                    if (Main.LocalPlayer.selectedItem == invSlot || GetInstance<ItemPreviewConfig>().ItemPreviewStyle == ItemPreviewStyle.All)
-                    {
-                        int count = 0;
-                        Vector2 echoPosition = position;
-                        for (int j = 1; j < 5; j++)
-                        {
-                            if (Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[invSlot + j * 10])
-                            {
-                                echoPosition.Y += (52 + 4) * Main.inventoryScale;
-                                SimpleDrawItemSlot(spriteBatch, inv, context, invSlot + j * 10, echoPosition, lightColor);
+                DrawPreviewItemSlot(spriteBatch, inv, context, slot, position, lightColor);
+            }
 
-                                count += 1;
-                                if (count >= GetInstance<ItemPreviewConfig>().ItemMaxCount)
-                                {
-                                    break;
-                                }
+            /*if (slot < 50)
+            {
+                // Draw Number Outline
+                DrawSlotOutline(spriteBatch, inv, context, slot, position, lightColor);
+            }*/
+        }
+
+        public static void DrawOutline(SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor = default(Color))
+        {
+            if (!modPlayer.slotHighlight[slot])
+            {
+                return;
+            }
+
+            // Getting style from MainConfig
+            int outlineStyle = (int)GetInstance<MainConfig>().OutlineStylePicker;
+            Texture2D outlineTexture = outlineTexturesA[outlineStyle].Value;
+
+            // Checking if outline colors should use style B
+            bool changeStyle = false;
+            if (!GetInstance<MainConfig>().OutlineStyleDontChange && Main.LocalPlayer.selectedItem == slot && !Main.playerInventory)
+            {
+                changeStyle = true;
+            }
+
+            // Checking if outline colors should be swapped
+            if (GetInstance<MainConfig>().OutlineStyleColorSwap)
+            {
+                changeStyle = !changeStyle;
+            }
+
+            // If changeStyle is true it means that outline should be changed to style 
+            if (changeStyle)
+            {
+                outlineTexture = outlineTexturesB[outlineStyle].Value;
+            }
+
+            // Setting outlinePosition to center different size Outline textures. Normal size of ItemSlot is 52x52
+            Vector2 outlinePosition = position + (new Vector2(52, 52) - outlineTexture.Size()) / 2;
+
+            // Color updated by Alpha value
+            Color color = Main.inventoryBack * GetInstance<MainConfig>().OutlineVisibility;
+
+            // Drawing Outline
+            spriteBatch.Draw(outlineTexture, outlinePosition, null, color, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
+        }
+
+        public static void DrawPreviewItemSlot(SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor = default(Color))
+        {
+            if (!modPlayer.slotHighlight[slot])
+            {
+                return;
+            }
+
+            if (GetInstance<ItemPreviewConfig>().ItemPreviewStyle != ItemPreviewStyle.Disabled && !Main.playerInventory)
+            {
+                if (Main.LocalPlayer.selectedItem == slot || GetInstance<ItemPreviewConfig>().ItemPreviewStyle == ItemPreviewStyle.All)
+                {
+                    int count = 0;
+                    Vector2 echoPosition = position;
+                    for (int j = 1; j < 5; j++)
+                    {
+                        if (modPlayer.slotHighlight[slot + j * 10])
+                        {
+                            echoPosition.Y += (52 + 4) * Main.inventoryScale;
+                            SimpleDrawItemSlot(spriteBatch, inv, context, slot + j * 10, echoPosition, lightColor);
+
+                            count += 1;
+                            if (count >= GetInstance<ItemPreviewConfig>().ItemMaxCount)
+                            {
+                                break;
                             }
                         }
                     }

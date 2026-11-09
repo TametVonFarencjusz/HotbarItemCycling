@@ -36,24 +36,19 @@ Configs: {
 	MainConfig: {
 		DisplayName: Main Config
 
+		Headers: {
+			InGame: In Game
+			Outlines: Outlines
+		}
+
 		NoCyclingWhileUsingItem: {
+			Label: No Cycling While Using Item
 			Tooltip:
 				'''
 				Prevent player from cycling items while using an item.
 				It prevent a bug similiar to Attribute Swapping from Minecraft.
-				Turn off at own risk.
+				Turn off at own risk!
 				'''
-			Label: No Cycling While Using Item
-		}
-
-		SkipUnconnectedItems: {
-			Tooltip: Marked as favorited items in column have to be directily connected to hotbar or indirectly by other favorited items.
-			Label: Skip Unconnected Favorited Items
-		}
-
-		Headers: {
-			InGame: In Game
-			Outlines: Outlines
 		}
 
 		OutlineStylePicker: {
@@ -86,12 +81,23 @@ Configs: {
 		}
 
 		OutlineVisibility: {
+			Label: Outline Visibility
 			Tooltip:
 				'''
 				Set Outline visibility.
 				Mod Config must be saved for the changes to appear in the Preview.
 				'''
-			Label: Outline Visibility
+		}
+
+		CyclingStyle: {
+			Label: Cycling Style
+			Tooltip:
+				'''
+				Disabled - Item Cycling is disabled.
+				Marked - Counts only all marked items in a column. Press MouseMiddle to mark/unmark item.
+				Favorited (Only Top) - Counts only favorited items in a column that are directily connected to hotbar or indirectly by other favorited items.
+				Favorited (Full Column) - Counts only all favorited items in a column.
+				'''
 		}
 	}
 
@@ -159,6 +165,30 @@ Configs: {
 		Disabled: {
 			Tooltip: ""
 			Label: Disabled
+		}
+
+		Tooltip: ""
+	}
+
+	HotbarItemCyclingStyle: {
+		Disabled: {
+			Tooltip: ""
+			Label: Disabled
+		}
+
+		Marked: {
+			Tooltip: ""
+			Label: Marked
+		}
+
+		FavoriteOnlyTop: {
+			Tooltip: ""
+			Label: Favorite (Only Top)
+		}
+
+		FavoriteFullColumn: {
+			Tooltip: ""
+			Label: Favorite (Full Column)
 		}
 
 		Tooltip: ""

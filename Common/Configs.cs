@@ -25,6 +25,14 @@ namespace HotbarItemCycling
         YellowBlueArrows
     }
 
+    public enum HotbarItemCyclingStyle
+    {
+        Disabled,
+        Marked,
+        FavoriteOnlyTop,
+        FavoriteFullColumn,
+    }
+
     // Main Config of the mod
     public class MainConfig : ModConfig
     {
@@ -32,8 +40,8 @@ namespace HotbarItemCycling
 
         // Add option to cycle through all favorited item in a column (false) or only items connected in chain to hotbar (true) 
         [Header("InGame")]
-        [DefaultValue(true)]
-        public bool SkipUnconnectedItems;
+        [DefaultValue(HotbarItemCyclingStyle.FavoriteOnlyTop)]
+        public HotbarItemCyclingStyle CyclingStyle;
 
 
         // Prevent Cycling when player is using item (true), if false some kind of bugs might occur something like Attribute Swapping from Minecraft

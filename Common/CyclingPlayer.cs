@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -30,27 +32,32 @@ namespace HotbarItemCycling
             }
 
             // Update slotHighlight
+            UpdateSlotHighlight();
+        }
+
+        private void UpdateSlotHighlight()
+        {
             slotHighlight = new bool[50];
+
+            // 
+            if (GetInstance<MainConfig>().CyclingStyle == HotbarItemCyclingStyle.Disabled)
+            {
+                return;
+            }
+
             for (int i = 0; i < 10; i++)
             {
-                // If item in hotbar is not favorited, then we don't need to check items under it
-                if (!Player.inventory[i].favorited)
-                {
-                    continue;
-                }
-
                 // Check if item under 
-                for (int j = 1; j < 5; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     int nextSlot = i + j * 10;
-                    // If item is favorited, then we set slotHighlight value of it's hotbarSlot to value of row of the item
-                    if (Player.inventory[nextSlot].favorited)
+                    // If item is favorited/marked, then we set slotHighlight value of it's hotbarSlot to value of row of the item
+                    if (CheckItem(Player.inventory[nextSlot]))
                     {
-                        slotHighlight[i] = true;
                         slotHighlight[nextSlot] = true;
                     }
                     // If we skip unconnected items then we don't need to check other items
-                    else if (GetInstance<MainConfig>().SkipUnconnectedItems)
+                    else if (GetInstance<MainConfig>().CyclingStyle == HotbarItemCyclingStyle.FavoriteOnlyTop)
                     {
                         break;
                     }
@@ -58,8 +65,52 @@ namespace HotbarItemCycling
             }
         }
 
+        // Check if item should be considered for drawing outline and cycling
+        private bool CheckItem(Item item)
+        {
+            if (item.IsAir)
+            {
+                return false;
+            }
+
+            if (GetInstance<MainConfig>().CyclingStyle == HotbarItemCyclingStyle.FavoriteOnlyTop || GetInstance<MainConfig>().CyclingStyle == HotbarItemCyclingStyle.FavoriteFullColumn)
+            {
+                return item.favorited;
+            }
+
+            if (GetInstance<MainConfig>().CyclingStyle == HotbarItemCyclingStyle.Marked)
+            {
+                return item.GetGlobalItem<ModGlobalItem>().hotbarSlot == 0;
+            }
+
+            return false;
+        }
+
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
+            if (triggersSet.MouseMiddle && GetInstance<MainConfig>().CyclingStyle == HotbarItemCyclingStyle.Marked)
+            {
+                if (!DrawUI.hoverItem.IsAir && buttonCooldown == 0)
+                {
+                    //byte newSLot = (byte)(Main.LocalPlayer.selectedItem < 10 ? Main.LocalPlayer.selectedItem : 255);
+                    byte newSLot = 0;
+
+                    if (DrawUI.hoverItem.GetGlobalItem<ModGlobalItem>().hotbarSlot != newSLot)
+                    {
+                        DrawUI.hoverItem.GetGlobalItem<ModGlobalItem>().hotbarSlot = newSLot;
+                        SoundEngine.PlaySound(SoundID.MenuTick);
+                    }
+                    else
+                    {
+                        DrawUI.hoverItem.GetGlobalItem<ModGlobalItem>().hotbarSlot = 255;
+                        SoundEngine.PlaySound(SoundID.MenuTick);
+                    }
+                }
+                buttonCooldown = 2;
+            }
+            DrawUI.hoverItem = new Item();
+
+
             // Prevent Cycling when player is using item (We don't want some kind of Attribute Swapping from Minecraft)
             if (Main.LocalPlayer.ItemAnimationActive && GetInstance<MainConfig>().NoCyclingWhileUsingItem)
             {
@@ -92,8 +143,8 @@ namespace HotbarItemCycling
 
         private void TryToCycle(int hotbarSlot)
         {
-            // If item in hotbar is not favorited then it won't cycle
-            if (!Player.inventory[hotbarSlot].favorited)
+            // If item in hotbar is not favorited/marked then it won't cycle
+            if (!slotHighlight[hotbarSlot])
             {
                 return;
             }
@@ -105,16 +156,11 @@ namespace HotbarItemCycling
             // Check what items should cycle
             for (int nextSlot = hotbarSlot + 10; nextSlot < 50; nextSlot += 10)
             {
-                // If item is favorited, then we set slotsToSwap next -1 to inventory slot of it
-                if (Player.inventory[nextSlot].favorited)
+                // If item is favorited/marked, then we set slotsToSwap next -1 to inventory slot of it
+                if (slotHighlight[nextSlot])
                 {
                     slotsToSwap[i] = nextSlot;
                     i += 1;
-                }
-                // If we skip unconnected items then we don't need to check other items
-                else if (GetInstance<MainConfig>().SkipUnconnectedItems)
-                {
-                    break;
                 }
             }
 
