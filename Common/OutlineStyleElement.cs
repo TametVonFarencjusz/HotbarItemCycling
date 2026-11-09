@@ -84,7 +84,7 @@ namespace HotbarItemCycling
 
             // Draw Outline
             OutlineStyle outline = GetValue();
-            Texture2D outlineTexture = CyclingPlayer.outlineTexturesA[(int)outline].Value;
+            Texture2D outlineTexture = DrawUI.outlineTexturesA[(int)outline].Value;
 
             // Checking if outline colors should use style B
             bool changeStyle = false;
@@ -102,7 +102,7 @@ namespace HotbarItemCycling
             // If changeStyle is true it means that outline should be changed to style 
             if (changeStyle)
             {
-                outlineTexture = CyclingPlayer.outlineTexturesB[(int)outline].Value;
+                outlineTexture = DrawUI.outlineTexturesB[(int)outline].Value;
             }
 
             // Color updated by Alpha value
