@@ -83,19 +83,19 @@ namespace HotbarItemCycling
             // Checking if item should be highlighted
             if (invSlot != -1 && Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[invSlot])
             {
-                // Getting style from CyclingConfig
-                int outlineStyle = (int)GetInstance<CyclingConfig>().OutlineStylePicker;
+                // Getting style from MainConfig
+                int outlineStyle = (int)GetInstance<MainConfig>().OutlineStylePicker;
                 Texture2D outlineTexture = outlineTexturesA[outlineStyle].Value;
 
                 // Checking if outline colors should use style B
                 bool changeStyle = false;
-                if (!GetInstance<CyclingConfig>().OutlineStyleDontChange && Main.LocalPlayer.selectedItem == invSlot && !Main.playerInventory)
+                if (!GetInstance<MainConfig>().OutlineStyleDontChange && Main.LocalPlayer.selectedItem == invSlot && !Main.playerInventory)
                 {
                     changeStyle = true;
                 }
 
                 // Checking if outline colors should be swapped
-                if (GetInstance<CyclingConfig>().OutlineStyleColorSwap)
+                if (GetInstance<MainConfig>().OutlineStyleColorSwap)
                 {
                     changeStyle = !changeStyle;
                 }
@@ -110,16 +110,16 @@ namespace HotbarItemCycling
                 Vector2 outlinePosition = position + (new Vector2(52, 52) - outlineTexture.Size()) / 2;
 
                 // Color updated by Alpha value
-                Color color = Main.inventoryBack * GetInstance<CyclingConfig>().OutlineVisibility;
+                Color color = Main.inventoryBack * GetInstance<MainConfig>().OutlineVisibility;
 
                 // Drawing Outline
                 spriteBatch.Draw(outlineTexture, outlinePosition, null, color, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
 
 
                 // Draw slot under
-                if (GetInstance<CyclingConfig>().ShowNextItemPicker != ShowNextItem.Disabled && !Main.playerInventory)
+                if (GetInstance<ItemPreviewConfig>().ItemPreviewStyle != ItemPreviewStyle.Disabled && !Main.playerInventory)
                 {
-                    if (Main.LocalPlayer.selectedItem == invSlot || GetInstance<CyclingConfig>().ShowNextItemPicker == ShowNextItem.All)
+                    if (Main.LocalPlayer.selectedItem == invSlot || GetInstance<ItemPreviewConfig>().ItemPreviewStyle == ItemPreviewStyle.All)
                     {
                         int count = 0;
                         Vector2 echoPosition = position;
@@ -131,7 +131,7 @@ namespace HotbarItemCycling
                                 SimpleDrawItemSlot(spriteBatch, inv, context, invSlot + j * 10, echoPosition, lightColor);
 
                                 count += 1;
-                                if (count >= GetInstance<CyclingConfig>().ShowNextItemMax)
+                                if (count >= GetInstance<ItemPreviewConfig>().ItemMaxCount)
                                 {
                                     break;
                                 }
@@ -166,7 +166,7 @@ namespace HotbarItemCycling
                 // Drawing Item
                 float scale = ItemSlot.DrawItemIcon(item, context, spriteBatch, position + vector / 2f, inventoryScale, 32f, color2);
 
-                if (GetInstance<CyclingConfig>().ShowNextItemStack)
+                if (GetInstance<ItemPreviewConfig>().ShowItemStack)
                 {
                     // Drawing Trap Sign
                     if (ItemID.Sets.TrapSigned[item.type])
@@ -324,7 +324,7 @@ namespace HotbarItemCycling
                         slotHighlight[nextSlot] = true;
                     }
                     // If we skip unconnected items then we don't need to check other items
-                    else if (GetInstance<CyclingConfig>().SkipUnconnectedItems)
+                    else if (GetInstance<MainConfig>().SkipUnconnectedItems)
                     {
                         break;
                     }
@@ -335,7 +335,7 @@ namespace HotbarItemCycling
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             // Prevent Cycling when player is using item (We don't want some kind of Attribute Swapping from Minecraft)
-            if (Main.LocalPlayer.ItemAnimationActive && GetInstance<CyclingConfig>().NoCyclingWhileUsingItem)
+            if (Main.LocalPlayer.ItemAnimationActive && GetInstance<MainConfig>().NoCyclingWhileUsingItem)
             {
                 return;
             }
@@ -386,7 +386,7 @@ namespace HotbarItemCycling
                     i += 1;
                 }
                 // If we skip unconnected items then we don't need to check other items
-                else if (GetInstance<CyclingConfig>().SkipUnconnectedItems)
+                else if (GetInstance<MainConfig>().SkipUnconnectedItems)
                 {
                     break;
                 }

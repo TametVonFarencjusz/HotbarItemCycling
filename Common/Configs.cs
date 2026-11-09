@@ -25,22 +25,8 @@ namespace HotbarItemCycling
         YellowBlueArrows
     }
 
-    public enum ShowNextItem
-    {
-        Disabled,
-        Single,
-        All,
-    }
-
-    public enum ShowNextItemMoveBuff
-    {
-        Disabled,
-        Dynamic,
-        Static,
-    }
-
-
-    public class CyclingConfig : ModConfig
+    // Main Config of the mod
+    public class MainConfig : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
@@ -72,23 +58,44 @@ namespace HotbarItemCycling
         // Swap outline color A with color B.
         [DefaultValue(false)]
         public bool OutlineStyleColorSwap;
+    }
 
-        [Header("ShowNextItemBeta")]
+    public enum ItemPreviewStyle
+    {
+        Disabled,
+        Single,
+        All,
+    }
+
+    public enum ItemPreviewBuffPosition
+    {
+        Disabled,
+        Dynamic,
+        Static,
+    }
+
+    // Config for Next Item Preview
+    public class ItemPreviewConfig : ModConfig
+    {
+        public override ConfigScope Mode => ConfigScope.ClientSide;
+
+        [Header("ItemPreviewBeta")]
 
         // Next Item Preview Style
-        [DefaultValue(ShowNextItem.Disabled)]
-        public ShowNextItem ShowNextItemPicker;
+        [DefaultValue(ItemPreviewStyle.Disabled)]
+        public ItemPreviewStyle ItemPreviewStyle;
 
         // Limit how many items should be shown below items in hotbar.
+        [DefaultValue(1)]
         [Range(1, 4)]
-        public int ShowNextItemMax;
+        public int ItemMaxCount;
 
         // Set how buffs should be moved be moved when Next Item Preview is shown.
-        [DefaultValue(ShowNextItemMoveBuff.Dynamic)]
-        public ShowNextItemMoveBuff ShowNextItemBuffPosition;
+        [DefaultValue(ItemPreviewBuffPosition.Dynamic)]
+        public ItemPreviewBuffPosition BuffPosition;
 
         // If it number next to Item should be shown. Numbers like stack count, ammo count, wire count, etc.
         [DefaultValue(true)]
-        public bool ShowNextItemStack;
+        public bool ShowItemStack;
     }
 }

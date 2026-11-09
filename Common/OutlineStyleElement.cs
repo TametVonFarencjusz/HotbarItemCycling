@@ -88,13 +88,13 @@ namespace HotbarItemCycling
 
             // Checking if outline colors should use style B
             bool changeStyle = false;
-            if (altStyle && !GetInstance<CyclingConfig>().OutlineStyleDontChange)
+            if (altStyle && !GetInstance<MainConfig>().OutlineStyleDontChange)
             {
                 changeStyle = true;
             }
 
             // Checking if outline colors should be swapped
-            if (GetInstance<CyclingConfig>().OutlineStyleColorSwap)
+            if (GetInstance<MainConfig>().OutlineStyleColorSwap)
             {
                 changeStyle = !changeStyle;
             }
@@ -106,7 +106,7 @@ namespace HotbarItemCycling
             }
 
             // Color updated by Alpha value
-            Color color = Color.White * GetInstance<CyclingConfig>().OutlineVisibility;
+            Color color = Color.White * GetInstance<MainConfig>().OutlineVisibility;
 
             // Drawing outline
             spriteBatch.Draw(outlineTexture, itemSlotCenter, null, color, 0f, outlineTexture.Size() / 2, 1f, SpriteEffects.None, 0f);

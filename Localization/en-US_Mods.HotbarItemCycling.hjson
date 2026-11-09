@@ -1,6 +1,40 @@
 Configs: {
-	CyclingConfig: {
-		DisplayName: Hotbar Item Cycling Config
+	OutlineStyle: {
+		Tooltip: ""
+
+		White: {
+			Tooltip: ""
+			Label: White
+		}
+
+		YellowBlue: {
+			Label: Yellow/Blue
+			Tooltip: ""
+		}
+
+		Golden: {
+			Label: Golden
+			Tooltip: ""
+		}
+
+		GreenArrows: {
+			Label: Green Arrows
+			Tooltip: ""
+		}
+
+		YellowBlueArrows: {
+			Label: Yellow/Blue Arrows
+			Tooltip: ""
+		}
+
+		ArrowsInTheCorner: {
+			Tooltip: ""
+			Label: Arrows In The Corner
+		}
+	}
+
+	MainConfig: {
+		DisplayName: Main Config
 
 		NoCyclingWhileUsingItem: {
 			Tooltip:
@@ -18,9 +52,8 @@ Configs: {
 		}
 
 		Headers: {
-			Outlines: Outlines
 			InGame: In Game
-			ShowNextItemBeta: Next Item Preview (Beta)
+			Outlines: Outlines
 		}
 
 		OutlineStylePicker: {
@@ -60,19 +93,16 @@ Configs: {
 				'''
 			Label: Outline Visibility
 		}
+	}
 
-		ShowNextItemPicker: {
-			Label: Next Item Preview Style:
-			Tooltip: ""
+	ItemPreviewConfig: {
+		ShowItemStack: {
+			Label: Show number next to Item:
+			Tooltip: Show number next to Item. A number can indicate how many items are stacked, how much ammunition a weapon has, etc.
 		}
 
-		ShowNextItemMax: {
-			Label: Max Count of Item in Preview:
-			Tooltip: Limit how many items should be shown below items in hotbar.
-		}
-
-		ShowNextItemBuffPosition: {
-			Label: Update Buff Position:
+		BuffPosition: {
+			Label: Buff Position Update:
 			Tooltip:
 				'''
 				Set how buffs should be moved be moved when Next Item Preview is shown.
@@ -82,81 +112,55 @@ Configs: {
 				'''
 		}
 
-		ShowNextItemStack: {
-			Label: Show number next to Item:
-			Tooltip: "Show number next to Item. A number can indicate how many items are stacked, how much ammunition a weapon has, etc."
+		ItemMaxCount: {
+			Label: Max Count of Item in Preview:
+			Tooltip: Limit how many items should be shown below items in hotbar.
 		}
+
+		ItemPreviewStyle: {
+			Label: Item Preview Style:
+			Tooltip: ""
+		}
+
+		Headers.ItemPreviewBeta: Item Preview (Beta)
+		DisplayName: Next Item Preview Config
 	}
 
-	OutlineStyle: {
-		Tooltip: ""
-
-		White: {
+	ItemPreviewBuffPosition: {
+		Static: {
 			Tooltip: ""
-			Label: White
+			Label: Static
 		}
 
-		YellowBlue: {
-			Label: Yellow/Blue
+		Dynamic: {
 			Tooltip: ""
+			Label: Dynamic
 		}
-
-		Golden: {
-			Label: Golden
-			Tooltip: ""
-		}
-
-		GreenArrows: {
-			Label: Green Arrows
-			Tooltip: ""
-		}
-
-		YellowBlueArrows: {
-			Label: Yellow/Blue Arrows
-			Tooltip: ""
-		}
-
-		ArrowsInTheCorner: {
-			Tooltip: ""
-			Label: Arrows In The Corner
-		}
-	}
-
-	ShowNextItem: {
-		Tooltip: ""
 
 		Disabled: {
-			Label: Disabled
 			Tooltip: ""
+			Label: Disabled
+		}
+
+		Tooltip: ""
+	}
+
+	ItemPreviewStyle: {
+		All: {
+			Tooltip: ""
+			Label: All
 		}
 
 		Single: {
 			Tooltip: ""
-			Label: Selected Item
+			Label: Single
 		}
-
-		All: {
-			Tooltip: ""
-			Label: All Items
-		}
-	}
-
-	ShowNextItemMoveBuff: {
-		Tooltip: ""
 
 		Disabled: {
+			Tooltip: ""
 			Label: Disabled
-			Tooltip: ""
 		}
 
-		Dynamic: {
-			Label: Dynamic
-			Tooltip: ""
-		}
-
-		Static: {
-			Label: Static
-			Tooltip: ""
-		}
+		Tooltip: ""
 	}
 }

@@ -16,7 +16,7 @@ namespace HotbarItemCycling
     {
         public override bool PreDraw(SpriteBatch spriteBatch, int type, int buffIndex, ref BuffDrawParams drawParams)
         {
-            if (GetInstance<CyclingConfig>().ShowNextItemPicker > 0 && GetInstance<CyclingConfig>().ShowNextItemBuffPosition > 0 && !Main.playerInventory)
+            if (GetInstance<ItemPreviewConfig>().ItemPreviewStyle > 0 && GetInstance<ItemPreviewConfig>().BuffPosition > 0 && !Main.playerInventory)
             {
                 int buffPositionOffsetY = (int)((54 + 4 + 10) * Main.inventoryScale * 1.4f);
                 int moveBuffs = 0;
@@ -32,7 +32,7 @@ namespace HotbarItemCycling
                         }
                     }
                 }
-                selectedCount = Math.Min(selectedCount, GetInstance<CyclingConfig>().ShowNextItemMax);
+                selectedCount = Math.Min(selectedCount, GetInstance<ItemPreviewConfig>().ItemMaxCount);
 
                 int maxCount = 0;
                 for (int i = 0; i < 10; i++)
@@ -47,16 +47,16 @@ namespace HotbarItemCycling
                     }
                     maxCount = Math.Max(maxCount, columnMax);
                 }
-                maxCount = Math.Min(maxCount, GetInstance<CyclingConfig>().ShowNextItemMax);
+                maxCount = Math.Min(maxCount, GetInstance<ItemPreviewConfig>().ItemMaxCount);
 
 
-                if (GetInstance<CyclingConfig>().ShowNextItemBuffPosition == ShowNextItemMoveBuff.Dynamic
-                    && GetInstance<CyclingConfig>().ShowNextItemPicker == ShowNextItem.Single)
+                if (GetInstance<ItemPreviewConfig>().BuffPosition == ItemPreviewBuffPosition.Dynamic
+                    && GetInstance<ItemPreviewConfig>().ItemPreviewStyle == ItemPreviewStyle.Single)
                 {
                     moveBuffs += buffPositionOffsetY * selectedCount;
                 }
-                else if (GetInstance<CyclingConfig>().ShowNextItemBuffPosition == ShowNextItemMoveBuff.Static
-                    || GetInstance<CyclingConfig>().ShowNextItemPicker == ShowNextItem.All)
+                else if (GetInstance<ItemPreviewConfig>().BuffPosition == ItemPreviewBuffPosition.Static
+                    || GetInstance<ItemPreviewConfig>().ItemPreviewStyle == ItemPreviewStyle.All)
                 {
                     moveBuffs += buffPositionOffsetY * maxCount;
                 }
