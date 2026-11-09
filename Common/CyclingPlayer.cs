@@ -3,9 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameInput;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.UI.Chat;
 using static Terraria.ModLoader.ModContent;
 
 namespace HotbarItemCycling
@@ -16,7 +19,7 @@ namespace HotbarItemCycling
         // buttonCooldown is used to prevent holding Hotbar Key to trigger cycle
         public int buttonCooldown = 0;
         // This array is set every frame during ModPlayer.PreUpdate() so any other ItemSlot can know if it should draw outline 
-        public int[] slotHighlight = new int[10];
+        public bool[] slotHighlight = new bool[50];
         // Texture of the Outline
         public static Asset<Texture2D>[] outlineTexturesA;
         // Texture of the Outline while item is selected
@@ -78,15 +81,15 @@ namespace HotbarItemCycling
             }
 
             // Checking if item should be highlighted
-            if (invSlot != -1 && Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[invSlot % 10] >= invSlot / 10)
+            if (invSlot != -1 && Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[invSlot])
             {
                 // Getting style from CyclingConfig
                 int outlineStyle = (int)GetInstance<CyclingConfig>().OutlineStylePicker;
                 Texture2D outlineTexture = outlineTexturesA[outlineStyle].Value;
-                
+
                 // Checking if outline colors should use style B
                 bool changeStyle = false;
-                if (Main.LocalPlayer.selectedItem == invSlot && !GetInstance<CyclingConfig>().OutlineStyleDontChange && !Main.playerInventory)
+                if (!GetInstance<CyclingConfig>().OutlineStyleDontChange && Main.LocalPlayer.selectedItem == invSlot && !Main.playerInventory)
                 {
                     changeStyle = true;
                 }
@@ -111,6 +114,184 @@ namespace HotbarItemCycling
 
                 // Drawing Outline
                 spriteBatch.Draw(outlineTexture, outlinePosition, null, color, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
+
+
+                // Draw slot under
+                if (GetInstance<CyclingConfig>().ShowNextItemPicker != ShowNextItem.Disabled && !Main.playerInventory)
+                {
+                    if (Main.LocalPlayer.selectedItem == invSlot || GetInstance<CyclingConfig>().ShowNextItemPicker == ShowNextItem.All)
+                    {
+                        int count = 0;
+                        Vector2 echoPosition = position;
+                        for (int j = 1; j < 5; j++)
+                        {
+                            if (Main.LocalPlayer.GetModPlayer<CyclingPlayer>().slotHighlight[invSlot + j * 10])
+                            {
+                                echoPosition.Y += (52 + 4) * Main.inventoryScale;
+                                SimpleDrawItemSlot(spriteBatch, inv, context, invSlot + j * 10, echoPosition, lightColor);
+
+                                count += 1;
+                                if (count >= GetInstance<CyclingConfig>().ShowNextItemMax)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void SimpleDrawItemSlot(SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor = default(Color))
+        {
+            Player player = Main.LocalPlayer;
+            Item item = inv[slot];
+            float inventoryScale = Main.inventoryScale;
+            Color color = Color.White;
+            if (lightColor != Color.Transparent)
+            {
+                color = lightColor;
+            }
+
+            Texture2D value = TextureAssets.InventoryBack.Value;
+            Color color2 = Main.inventoryBack;
+
+            byte b = 200;
+            color2 = new Color(b, b, b, b);
+            spriteBatch.Draw(value, position, null, color2, 0f, default(Vector2), inventoryScale, SpriteEffects.None, 0f);
+
+            Vector2 vector = value.Size() * inventoryScale;
+            if (item.type > ItemID.None && item.stack > 0)
+            {
+                // Drawing Item
+                float scale = ItemSlot.DrawItemIcon(item, context, spriteBatch, position + vector / 2f, inventoryScale, 32f, color2);
+
+                if (GetInstance<CyclingConfig>().ShowNextItemStack)
+                {
+                    // Drawing Trap Sign
+                    if (ItemID.Sets.TrapSigned[item.type])
+                    {
+                        spriteBatch.Draw(TextureAssets.Wire.Value, position + new Vector2(40f, 40f) * inventoryScale, new Rectangle(4, 58, 8, 8), color, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
+                    }
+
+                    // Drawing Unsafe Indicator
+                    if (ItemID.Sets.DrawUnsafeIndicator[item.type])
+                    {
+                        Vector2 vector2 = new Vector2(-4f, -4f) * inventoryScale;
+                        Texture2D value7 = TextureAssets.Extra[ExtrasID.UnsafeIndicator].Value;
+                        Rectangle rectangle2 = value7.Frame();
+                        spriteBatch.Draw(value7, position + vector2 + new Vector2(40f, 40f) * inventoryScale, rectangle2, color, 0f, rectangle2.Size() / 2f, 1f, SpriteEffects.None, 0f);
+                    }
+
+                    // Drawing Rubble Maker Indicator
+                    if (item.type == ItemID.RubblemakerSmall || item.type == ItemID.RubblemakerMedium || item.type == ItemID.RubblemakerLarge)
+                    {
+                        Vector2 vector3 = new Vector2(2f, -6f) * inventoryScale;
+                        switch (item.type)
+                        {
+                            case ItemID.RubblemakerSmall:
+                                {
+                                    Texture2D value10 = TextureAssets.Extra[ExtrasID.RubbleMakerIndicator].Value;
+                                    Rectangle rectangle5 = value10.Frame(3, 1, 2);
+                                    spriteBatch.Draw(value10, position + vector3 + new Vector2(40f, 40f) * inventoryScale, rectangle5, color, 0f, rectangle5.Size() / 2f, 1f, SpriteEffects.None, 0f);
+                                    break;
+                                }
+                            case ItemID.RubblemakerMedium:
+                                {
+                                    Texture2D value9 = TextureAssets.Extra[ExtrasID.RubbleMakerIndicator].Value;
+                                    Rectangle rectangle4 = value9.Frame(3, 1, 1);
+                                    spriteBatch.Draw(value9, position + vector3 + new Vector2(40f, 40f) * inventoryScale, rectangle4, color, 0f, rectangle4.Size() / 2f, 1f, SpriteEffects.None, 0f);
+                                    break;
+                                }
+                            case ItemID.RubblemakerLarge:
+                                {
+                                    Texture2D value8 = TextureAssets.Extra[ExtrasID.RubbleMakerIndicator].Value;
+                                    Rectangle rectangle3 = value8.Frame(3);
+                                    spriteBatch.Draw(value8, position + vector3 + new Vector2(40f, 40f) * inventoryScale, rectangle3, color, 0f, rectangle3.Size() / 2f, 1f, SpriteEffects.None, 0f);
+                                    break;
+                                }
+                        }
+                    }
+
+                    // Drawing stack number
+                    if (item.stack > 1)
+                    {
+                        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, item.stack.ToString(), position + new Vector2(10f, 26f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale), -1f, inventoryScale);
+                    }
+
+                    // Drawing bonus number like Ammo Count, Bait Count or Wire Count
+                    int num10 = -1;
+                    if (item.DD2Summon)
+                    {
+                        for (int i = 0; i < 58; i++)
+                        {
+                            if (inv[i].type == ItemID.DD2EnergyCrystal)
+                            {
+                                num10 += inv[i].stack;
+                            }
+                        }
+
+                        if (num10 >= 0)
+                        {
+                            num10++;
+                        }
+                    }
+
+                    if (item.useAmmo > 0)
+                    {
+                        int useAmmo = item.useAmmo;
+                        num10 = 0;
+                        for (int j = 0; j < 58; j++)
+                        {
+                            if (inv[j].stack > 0 && ItemLoader.CanChooseAmmo(item, inv[j], player))
+                            {
+                                num10 += inv[j].stack;
+                            }
+                        }
+                    }
+
+                    if (item.fishingPole > 0)
+                    {
+                        num10 = 0;
+                        for (int k = 0; k < 58; k++)
+                        {
+                            if (inv[k].bait > 0)
+                            {
+                                num10 += inv[k].stack;
+                            }
+                        }
+                    }
+
+                    if (item.tileWand > 0)
+                    {
+                        int tileWand = item.tileWand;
+                        num10 = 0;
+                        for (int l = 0; l < 58; l++)
+                        {
+                            if (inv[l].type == tileWand)
+                            {
+                                num10 += inv[l].stack;
+                            }
+                        }
+                    }
+
+                    if (item.type == ItemID.Wrench || item.type == ItemID.GreenWrench || item.type == ItemID.BlueWrench || item.type == ItemID.YellowWrench || item.type == ItemID.MulticolorWrench || item.type == ItemID.WireKite)
+                    {
+                        num10 = 0;
+                        for (int m = 0; m < 58; m++)
+                        {
+                            if (inv[m].type == ItemID.Wire)
+                            {
+                                num10 += inv[m].stack;
+                            }
+                        }
+                    }
+
+                    if (num10 != -1)
+                    {
+                        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, num10.ToString(), position + new Vector2(8f, 30f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale * 0.8f), -1f, inventoryScale);
+                    }
+                }
             }
         }
 
@@ -123,10 +304,9 @@ namespace HotbarItemCycling
             }
 
             // Update slotHighlight
+            slotHighlight = new bool[50];
             for (int i = 0; i < 10; i++)
             {
-                slotHighlight[i] = -1;
-
                 // If item in hotbar is not favorited, then we don't need to check items under it
                 if (!Player.inventory[i].favorited)
                 {
@@ -140,7 +320,8 @@ namespace HotbarItemCycling
                     // If item is favorited, then we set slotHighlight value of it's hotbarSlot to value of row of the item
                     if (Player.inventory[nextSlot].favorited)
                     {
-                        slotHighlight[i] = j;
+                        slotHighlight[i] = true;
+                        slotHighlight[nextSlot] = true;
                     }
                     // If we skip unconnected items then we don't need to check other items
                     else if (GetInstance<CyclingConfig>().SkipUnconnectedItems)

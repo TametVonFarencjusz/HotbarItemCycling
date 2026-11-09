@@ -20,6 +20,7 @@ Configs: {
 		Headers: {
 			Outlines: Outlines
 			InGame: In Game
+			ShowNextItemBeta: Next Item Preview (Beta)
 		}
 
 		OutlineStylePicker: {
@@ -59,6 +60,32 @@ Configs: {
 				'''
 			Label: Outline Visibility
 		}
+
+		ShowNextItemPicker: {
+			Label: Next Item Preview Style:
+			Tooltip: ""
+		}
+
+		ShowNextItemMax: {
+			Label: Max Count of Item in Preview:
+			Tooltip: Limit how many items should be shown below items in hotbar.
+		}
+
+		ShowNextItemBuffPosition: {
+			Label: Update Buff Position:
+			Tooltip:
+				'''
+				Set how buffs should be moved be moved when Next Item Preview is shown.
+				Disable - Buffs won't be moved. Preview items may cover some buffs. Should be used with any other mod that change buff position.
+				Dynamic - Buffs will be dynamically moved if the item preview would cover them.
+				Static - Buffs will be moved so that the preview elements do not cover them.
+				'''
+		}
+
+		ShowNextItemStack: {
+			Label: Show number next to Item:
+			Tooltip: "Show number next to Item. A number can indicate how many items are stacked, how much ammunition a weapon has, etc."
+		}
 	}
 
 	OutlineStyle: {
@@ -92,6 +119,44 @@ Configs: {
 		ArrowsInTheCorner: {
 			Tooltip: ""
 			Label: Arrows In The Corner
+		}
+	}
+
+	ShowNextItem: {
+		Tooltip: ""
+
+		Disabled: {
+			Label: Disabled
+			Tooltip: ""
+		}
+
+		Single: {
+			Tooltip: ""
+			Label: Selected Item
+		}
+
+		All: {
+			Tooltip: ""
+			Label: All Items
+		}
+	}
+
+	ShowNextItemMoveBuff: {
+		Tooltip: ""
+
+		Disabled: {
+			Label: Disabled
+			Tooltip: ""
+		}
+
+		Dynamic: {
+			Label: Dynamic
+			Tooltip: ""
+		}
+
+		Static: {
+			Label: Static
+			Tooltip: ""
 		}
 	}
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel;
+using Newtonsoft.Json;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -10,6 +12,34 @@ using static Terraria.ModLoader.ModContent;
 
 namespace HotbarItemCycling
 {
+    // This custom config UI element shows a completely custom config element that handles setting and getting the values in addition to custom drawing.
+    [JsonConverter(typeof(StringEnumConverter))]
+    [CustomModConfigItem(typeof(OutlineStyleElement))]
+    public enum OutlineStyle
+    {
+        White,
+        YellowBlue,
+        Golden,
+        ArrowsInTheCorner,
+        GreenArrows,
+        YellowBlueArrows
+    }
+
+    public enum ShowNextItem
+    {
+        Disabled,
+        Single,
+        All,
+    }
+
+    public enum ShowNextItemMoveBuff
+    {
+        Disabled,
+        Dynamic,
+        Static,
+    }
+
+
     public class CyclingConfig : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
@@ -42,5 +72,23 @@ namespace HotbarItemCycling
         // Swap outline color A with color B.
         [DefaultValue(false)]
         public bool OutlineStyleColorSwap;
+
+        [Header("ShowNextItemBeta")]
+
+        // Next Item Preview Style
+        [DefaultValue(ShowNextItem.Disabled)]
+        public ShowNextItem ShowNextItemPicker;
+
+        // Limit how many items should be shown below items in hotbar.
+        [Range(1, 4)]
+        public int ShowNextItemMax;
+
+        // Set how buffs should be moved be moved when Next Item Preview is shown.
+        [DefaultValue(ShowNextItemMoveBuff.Dynamic)]
+        public ShowNextItemMoveBuff ShowNextItemBuffPosition;
+
+        // If it number next to Item should be shown. Numbers like stack count, ammo count, wire count, etc.
+        [DefaultValue(true)]
+        public bool ShowNextItemStack;
     }
 }

@@ -18,19 +18,6 @@ using static Terraria.ModLoader.ModContent;
 
 namespace HotbarItemCycling
 {
-    // This custom config UI element shows a completely custom config element that handles setting and getting the values in addition to custom drawing.
-    [JsonConverter(typeof(StringEnumConverter))]
-    [CustomModConfigItem(typeof(OutlineStyleElement))]
-    public enum OutlineStyle
-    {
-        White,
-        YellowBlue,
-        Golden,
-        ArrowsInTheCorner,
-        GreenArrows,
-        YellowBlueArrows
-    }
-
     class OutlineStyleElement : ConfigElement
     {
         string[] valueStrings;
