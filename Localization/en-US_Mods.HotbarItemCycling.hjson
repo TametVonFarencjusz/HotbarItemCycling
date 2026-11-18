@@ -112,7 +112,7 @@ Configs: {
 			Tooltip:
 				'''
 				Set how buffs should be moved be moved when Next Item Preview is shown.
-				Disable - Buffs won't be moved. Preview items may cover some buffs. Should be used with any other mod that change buff position.
+				Disable - Buffs won't be moved. Preview items may cover some buffs. Should be used with any other mod that change buffs position.
 				Dynamic - Buffs will be dynamically moved if the item preview would cover them.
 				Static - Buffs will be moved so that the preview elements do not cover them.
 				'''
@@ -134,17 +134,17 @@ Configs: {
 
 	ItemPreviewBuffPosition: {
 		Static: {
-			Tooltip: ""
+			Tooltip: Buffs will be moved so that the preview elements do not cover them.
 			Label: Static
 		}
 
 		Dynamic: {
-			Tooltip: ""
+			Tooltip: Buffs will be dynamically moved if the item preview would cover them.
 			Label: Dynamic
 		}
 
 		Disabled: {
-			Tooltip: ""
+			Tooltip: Buffs won't be moved. Preview items may cover some buffs. Should be used with any other mod that change buffs position.
 			Label: Disabled
 		}
 
@@ -172,22 +172,22 @@ Configs: {
 
 	HotbarItemCyclingStyle: {
 		Disabled: {
-			Tooltip: ""
+			Tooltip: Item Cycling is disabled.
 			Label: Disabled
 		}
 
 		Marked: {
-			Tooltip: ""
+			Tooltip: Counts only all marked items in a column. Press MouseMiddle to mark/unmark item.
 			Label: Marked
 		}
 
 		FavoriteOnlyTop: {
-			Tooltip: ""
+			Tooltip: Counts only favorited items in a column that are directily connected to hotbar or indirectly by other favorited items.
 			Label: Favorite (Only Top)
 		}
 
 		FavoriteFullColumn: {
-			Tooltip: ""
+			Tooltip: Counts only all favorited items in a column.
 			Label: Favorite (Full Column)
 		}
 
